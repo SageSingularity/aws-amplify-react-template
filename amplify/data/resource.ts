@@ -1,17 +1,33 @@
-import { type ClientSchema, a, defineData } from "@aws-amplify/backend";
+/* eslint-disable @typescript-eslint/no-explicit-any */
 
-/*== STEP 1 ===============================================================
-The section below creates a Todo database table with a "content" field. Try
-adding a new "isDone" field as a boolean. The authorization rule below
-specifies that any user authenticated via an API key can "create", "read",
-"update", and "delete" any "Todo" records.
-=========================================================================*/
+import { type ClientSchema, a, defineData } from "@aws-amplify/backend";
+import { exampleLambdaFunction } from "../functions/example-lambda-function/resource";
+// Documentation for this file: https://docs.amplify.aws/vue/build-a-backend/data/
 const schema = a.schema({
+  // GraphQL Query/Mutation: Call a Lambda Function with arguments. This IaC will create
+  // an API you can call from your frontend.
+  exampleAPIForCallingALambdaFunction: a
+    .query() // Change to Mutation() if you want to create, update, or delete data
+    .arguments({
+      argumentOne: a.string(), // Customize arguments
+      argumentTwo: a.string(),
+    })
+    .returns(a.string())
+    .handler(a.handler.function(exampleLambdaFunction))
+    .authorization((allow: { publicApiKey: () => any }) => [
+      allow.publicApiKey(),
+    ]), // Customize authorization
+
+  // DynamoDB Table: Each table gets its own .model() IaC definition.
+  // You can also create relational fields:
   Todo: a
     .model({
-      content: a.string(),
+      content: a.string(), // Customize fields
     })
-    .authorization((allow) => [allow.publicApiKey()]),
+    .authorization((allow) => [
+      allow.publicApiKey().to(["read"]), // Anyone can read
+      allow.owner().to(["read", "create", "delete"]), // Only the owner can read, create, or delete
+    ]),
 });
 
 export type Schema = ClientSchema<typeof schema>;

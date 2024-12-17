@@ -20,6 +20,7 @@ const schema = a.schema({
 
   // DynamoDB Table: Each table gets its own .model() IaC definition.
   // You can also create relational fields:
+  // TODO: Replace Todo table with your data
   Todo: a
     .model({
       content: a.string(), // Customize fields
@@ -27,6 +28,18 @@ const schema = a.schema({
     .authorization((allow) => [
       allow.publicApiKey().to(["read"]), // Anyone can read
       allow.owner().to(["read", "create", "delete"]), // Only the owner can read, create, or delete
+    ]),
+  // Feature Flags: Control Features in Production via Boolean Flags
+  // The data in this table should be managed in the Amplify Console.
+  FeatureFlags: a
+    .model({
+      name: a.string().required(), // e.g., "enableArtistSearch"
+      isEnabled: a.boolean().required(),
+      description: a.string(),
+      environment: a.string(), // e.g., "dev", "staging", "prod"
+    })
+    .authorization((allow) => [
+      allow.publicApiKey().to(["read"]), // Everyone can read
     ]),
 });
 

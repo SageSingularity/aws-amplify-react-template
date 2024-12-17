@@ -1,6 +1,7 @@
 /* eslint-disable @typescript-eslint/no-unused-vars */
 /* eslint-disable no-case-declarations */
 /* eslint-disable @typescript-eslint/no-explicit-any */
+// TODO: Use Sentry here to log Backend errors
 export function errorLogging(context: string) {
   return function (originalMethod: any, _context: any) {
     function replacementMethod(this: any, ...args: any[]) {

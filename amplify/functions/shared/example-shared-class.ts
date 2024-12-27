@@ -1,4 +1,4 @@
-import { errorLogging } from "./error-logging";
+import { errorLogging } from "../error/error-logging";
 
 // Define methods, classes, and other shared code here.
 // Error Handling: https://docs.amplify.aws/vue/build-a-backend/functions/error-handling/

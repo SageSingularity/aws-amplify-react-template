@@ -1,4 +1,4 @@
-import { errorLogging } from "../../../../amplify/functions/shared/error-logging";
+import { errorLogging } from "../../../../amplify/functions/error/error-logging";
 
 describe("errorLogging Decorator", () => {
   let consoleLogSpy: jest.SpyInstance;

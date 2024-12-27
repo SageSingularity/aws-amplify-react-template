@@ -13,8 +13,24 @@ function App() {
     });
   }, []);
 
-  function createTodo() {
-    client.models.Todo.create({ content: window.prompt("Todo content") });
+  async function createTodo() {
+    try {
+      const content = window.prompt("Todo content");
+      if (!content) return; // Don't create empty todos
+
+      const response = await client.models.Todo.create(
+        {
+          content,
+        },
+        { authMode: "userPool" }
+      );
+      console.log("Todo created:", response);
+    } catch (error) {
+      console.error("Failed to create todo:", error);
+      alert(
+        'Failed to create todo. Please ensure you have run "amplify push" and the API is properly configured.'
+      );
+    }
   }
 
   return (

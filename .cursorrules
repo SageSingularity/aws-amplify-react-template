@@ -1,0 +1,1 @@
+This project uses the following technologies: React, Vite, AWS Amplify Generation 2, Typescript, and TypeDoc to generate documentation. You are an expert in these technologies. Do not use amplify cli. You will add contextual comments to typescript code. Don't use explicit any.

@@ -2,6 +2,8 @@
 
 import { type ClientSchema, a, defineData } from "@aws-amplify/backend";
 import { exampleLambdaFunction } from "../functions/example-lambda-function/resource";
+import { exampleConnectionToResourceUsingHTTP } from "../functions/example-connection-to-resource-using-http/resource";
+
 // Documentation for this file: https://docs.amplify.aws/vue/build-a-backend/data/
 const schema = a.schema({
   // GraphQL Query/Mutation: Call a Lambda Function with arguments. This IaC will create
@@ -18,17 +20,27 @@ const schema = a.schema({
       allow.publicApiKey(),
     ]), // Customize authorization
 
+  // GraphQL Query: This will make an HTTP request, replacing the body with the value from the frontend API call.
+  exampleConnectionToResourceUsingHTTP: a
+    .query() // Change to Mutation() if you want to create, update, or delete data
+    .arguments({
+      body: a.string(), // Customize arguments
+    })
+    .returns(a.string())
+    .handler(a.handler.function(exampleConnectionToResourceUsingHTTP))
+    .authorization((allow: { publicApiKey: () => any }) => [
+      allow.publicApiKey(),
+    ]), // Customize authorization
+
   // DynamoDB Table: Each table gets its own .model() IaC definition.
   // You can also create relational fields:
   // TODO: Replace Todo table with your data
   Todo: a
     .model({
-      content: a.string(), // Customize fields
+      content: a.string(),
     })
-    .authorization((allow) => [
-      allow.publicApiKey().to(["read"]), // Anyone can read
-      allow.owner().to(["read", "create", "delete"]), // Only the owner can read, create, or delete
-    ]),
+    .authorization((allow) => [allow.publicApiKey()]),
+
   // Feature Flags: Control Features in Production via Boolean Flags
   // The data in this table should be managed in the Amplify Console.
   FeatureFlags: a

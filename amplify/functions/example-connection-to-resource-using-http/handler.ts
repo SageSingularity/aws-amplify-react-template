@@ -10,6 +10,7 @@ export const handler: Schema["exampleConnectionToResourceUsingHTTP"]["functionHa
     const response = await httpClient.post<{ body?: string | null }, string>(
       "/test",
       {
+        // WARNING: Strictly type the body, or else any body will be accepted.
         body: event.arguments?.body,
       }
     );
